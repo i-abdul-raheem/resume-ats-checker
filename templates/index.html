@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Score Calculator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: none;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .score.high { color: #28a745; }
+        .score.medium { color: #ffc107; }
+        .score.low { color: #dc3545; }
+        .component-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .component {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .component-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .component-value {
+            font-size: 18px;
+            color: #007bff;
+        }
+        .analysis {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .analysis h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 10px 0;
+        }
+        .keyword {
+            background: #e9ecef;
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+        .keyword.matched {
+            background: #d4edda;
+            color: #155724;
+        }
+        .keyword.missing {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+        .error {
+            color: #dc3545;
+            text-align: center;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            color: #007bff;
+            border-bottom-color: #007bff;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+        
+        small {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ATS Score Calculator</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('text')">Text Input</button>
+            <button class="tab-btn" onclick="switchTab('file')">File Upload</button>
+        </div>
+        
+        <form id="atsFormText" class="tab-content active">
+            <div class="form-group">
+                <label for="resume">Resume Text:</label>
+                <textarea id="resume" name="resume" placeholder="Paste your resume text here..." required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="jobDescription">Job Description:</label>
+                <textarea id="jobDescription" name="jobDescription" placeholder="Paste the job description here..." required></textarea>
+            </div>
+            
+            <button type="submit" id="submitBtnText">Calculate ATS Score</button>
+        </form>
+        
+        <form id="atsFormFile" class="tab-content">
+            <div class="form-group">
+                <label for="resumeFile">Resume File:</label>
+                <input type="file" id="resumeFile" name="resumeFile" accept=".pdf,.docx,.txt" required>
+                <small>Supported formats: PDF, DOCX, TXT</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="jobDescriptionFile">Job Description:</label>
+                <textarea id="jobDescriptionFile" name="jobDescriptionFile" placeholder="Paste the job description here..." required></textarea>
+            </div>
+            
+            <button type="submit" id="submitBtnFile">Calculate ATS Score</button>
+        </form>
+        
+        <div id="loading" class="loading" style="display: none;">
+            Analyzing resume and job description...
+        </div>
+        
+        <div id="error" class="error" style="display: none;"></div>
+        
+        <div id="results" class="results">
+            <div id="overallScore" class="score"></div>
+            
+            <div class="component-scores" id="componentScores"></div>
+            
+            <div class="analysis">
+                <h3>Analysis</h3>
+                <div>
+                    <strong>Matched Keywords:</strong>
+                    <div id="matchedKeywords" class="keywords"></div>
+                </div>
+                <div>
+                    <strong>Missing Keywords:</strong>
+                    <div id="missingKeywords" class="keywords"></div>
+                </div>
+                <div>
+                    <strong>Recommendations:</strong>
+                    <ul id="recommendations"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById('atsForm' + (tabName === 'text' ? 'Text' : 'File')).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+        
+        // Text input form handler
+        document.getElementById('atsFormText').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtnText');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const results = document.getElementById('results');
+            
+            // Show loading, hide other elements
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            results.style.display = 'none';
+            
+            const resumeText = document.getElementById('resume').value;
+            const jobDescription = document.getElementById('jobDescription').value;
+            
+            try {
+                const response = await fetch('/calculate-ats-score', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        resume_text: resumeText,
+                        job_description: jobDescription
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Display results
+                displayResults(data);
+                
+            } catch (err) {
+                error.textContent = `Error: ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        // File upload form handler
+        document.getElementById('atsFormFile').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtnFile');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const results = document.getElementById('results');
+            
+            // Show loading, hide other elements
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            results.style.display = 'none';
+            
+            const resumeFile = document.getElementById('resumeFile').files[0];
+            const jobDescription = document.getElementById('jobDescriptionFile').value;
+            
+            if (!resumeFile) {
+                error.textContent = 'Please select a resume file';
+                error.style.display = 'block';
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+                return;
+            }
+            
+            try {
+                const formData = new FormData();
+                formData.append('resume_file', resumeFile);
+                formData.append('job_description', jobDescription);
+                
+                const response = await fetch('/calculate-ats-score-file', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Display results
+                displayResults(data);
+                
+            } catch (err) {
+                error.textContent = `Error: ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+        
+        function displayResults(data) {
+            const overallScore = document.getElementById('overallScore');
+            const componentScores = document.getElementById('componentScores');
+            const matchedKeywords = document.getElementById('matchedKeywords');
+            const missingKeywords = document.getElementById('missingKeywords');
+            const recommendations = document.getElementById('recommendations');
+            const results = document.getElementById('results');
+            
+            // Overall score
+            const score = data.overall_score;
+            overallScore.textContent = `Overall ATS Score: ${score}/100`;
+            overallScore.className = 'score ' + (score >= 80 ? 'high' : score >= 60 ? 'medium' : 'low');
+            
+            // Component scores
+            componentScores.innerHTML = '';
+            Object.entries(data.scores).forEach(([component, score]) => {
+                const componentDiv = document.createElement('div');
+                componentDiv.className = 'component';
+                componentDiv.innerHTML = `
+                    <div class="component-name">${component.replace(/_/g, ' ').toUpperCase()}</div>
+                    <div class="component-value">${score}/100</div>
+                `;
+                componentScores.appendChild(componentDiv);
+            });
+            
+            // Keywords
+            matchedKeywords.innerHTML = '';
+            data.analysis.matched_keywords.forEach(keyword => {
+                const keywordSpan = document.createElement('span');
+                keywordSpan.className = 'keyword matched';
+                keywordSpan.textContent = keyword;
+                matchedKeywords.appendChild(keywordSpan);
+            });
+            
+            missingKeywords.innerHTML = '';
+            data.analysis.missing_keywords.forEach(keyword => {
+                const keywordSpan = document.createElement('span');
+                keywordSpan.className = 'keyword missing';
+                keywordSpan.textContent = keyword;
+                missingKeywords.appendChild(keywordSpan);
+            });
+            
+            // Recommendations
+            recommendations.innerHTML = '';
+            data.analysis.recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recommendations.appendChild(li);
+            });
+            
+            // Display file information if available
+            if (data.file_info) {
+                const fileInfoDiv = document.createElement('div');
+                fileInfoDiv.className = 'analysis';
+                fileInfoDiv.innerHTML = `
+                    <h3>File Information</h3>
+                    <p><strong>Filename:</strong> ${data.file_info.filename}</p>
+                    <p><strong>File Size:</strong> ${(data.file_info.file_size / 1024).toFixed(2)} KB</p>
+                    <p><strong>Extracted Text Length:</strong> ${data.file_info.extracted_text_length} characters</p>
+                `;
+                results.insertBefore(fileInfoDiv, results.firstChild);
+            }
+            
+            results.style.display = 'block';
+        }
+    </script>
+</body>
+</html> 

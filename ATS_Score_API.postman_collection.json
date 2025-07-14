@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "ATS Score Calculator API",
+    "description": "Complete Postman collection for testing the ATS Score Calculator API. Includes text input and file upload endpoints for resume analysis.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/health",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["health"]
+        },
+        "description": "Check if the API server is running and components are initialized."
+      },
+      "response": []
+    },
+    {
+      "name": "Get Supported Formats",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/supported-formats",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["supported-formats"]
+        },
+        "description": "Get list of supported file formats for resume upload."
+      },
+      "response": []
+    },
+    {
+      "name": "Calculate ATS Score (Text Input)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"resume_text\": \"JOHN DOE\\nSoftware Engineer\\njohn.doe@email.com | (555) 123-4567\\n\\nSUMMARY\\nExperienced software engineer with 5+ years developing scalable web applications using Python, JavaScript, and cloud technologies. Passionate about machine learning and data-driven solutions.\\n\\nEXPERIENCE\\nSenior Software Engineer | TechCorp Inc. | 2020 - Present\\n- Developed and maintained RESTful APIs using Python Flask and FastAPI\\n- Implemented machine learning models for data analysis using scikit-learn and TensorFlow\\n- Led a team of 3 developers in building a microservices architecture\\n- Deployed applications using Docker and AWS services\\n\\nEDUCATION\\nBachelor of Science in Computer Science\\nUniversity of Technology | 2014 - 2018\\n\\nSKILLS\\nProgramming: Python, JavaScript, Java, SQL\\nFrameworks: Flask, FastAPI, React, Node.js\\nCloud & DevOps: AWS, Docker, Kubernetes\\nMachine Learning: TensorFlow, scikit-learn, pandas\",\n  \"job_description\": \"Senior Software Engineer - Machine Learning Focus\\n\\nRequirements:\\n- 5+ years of experience in software development\\n- Strong proficiency in Python programming\\n- Experience with machine learning frameworks (TensorFlow, PyTorch, scikit-learn)\\n- Knowledge of cloud platforms (AWS, Azure, or GCP)\\n- Experience with Docker and containerization\\n- Bachelor's degree in Computer Science or related field\\n\\nResponsibilities:\\n- Develop and maintain machine learning models and pipelines\\n- Build scalable backend services using Python\\n- Deploy and monitor applications in cloud environments\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/calculate-ats-score",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["calculate-ats-score"]
+        },
+        "description": "Calculate ATS score using resume text and job description text input."
+      },
+      "response": []
+    },
+    {
+      "name": "Calculate ATS Score (File Upload)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "resume_file",
+              "type": "file",
+              "src": "",
+              "description": "Upload your resume file (PDF, DOCX, or TXT)"
+            },
+            {
+              "key": "job_description",
+              "type": "text",
+              "value": "Senior Software Engineer - Machine Learning Focus\n\nRequirements:\n- 5+ years of experience in software development\n- Strong proficiency in Python programming\n- Experience with machine learning frameworks (TensorFlow, PyTorch, scikit-learn)\n- Knowledge of cloud platforms (AWS, Azure, or GCP)\n- Experience with Docker and containerization\n- Bachelor's degree in Computer Science or related field\n\nResponsibilities:\n- Develop and maintain machine learning models and pipelines\n- Build scalable backend services using Python\n- Deploy and monitor applications in cloud environments",
+              "description": "Job description text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/calculate-ats-score-file",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["calculate-ats-score-file"]
+        },
+        "description": "Calculate ATS score using uploaded resume file and job description text."
+      },
+      "response": []
+    },
+    {
+      "name": "Analyze Resume (Text Input)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"resume_text\": \"JANE SMITH\\nData Scientist\\njane.smith@email.com | (555) 987-6543\\n\\nSUMMARY\\nData scientist with 3+ years experience in machine learning, statistical analysis, and data visualization. Expertise in Python, R, and SQL for data manipulation and modeling.\\n\\nEXPERIENCE\\nData Scientist | DataCorp | 2021 - Present\\n- Built predictive models using scikit-learn and TensorFlow\\n- Performed statistical analysis and A/B testing\\n- Created data visualizations using matplotlib and seaborn\\n- Collaborated with engineering teams to deploy ML models\\n\\nEDUCATION\\nMaster of Science in Data Science\\nUniversity of Analytics | 2019 - 2021\\n\\nSKILLS\\nProgramming: Python, R, SQL\\nML/AI: scikit-learn, TensorFlow, PyTorch\\nData Visualization: matplotlib, seaborn, Tableau\\nStatistics: hypothesis testing, regression analysis\",\n  \"job_description\": \"Senior Data Scientist\\n\\nRequirements:\\n- 3+ years of experience in data science or machine learning\\n- Strong programming skills in Python and SQL\\n- Experience with machine learning frameworks (scikit-learn, TensorFlow)\\n- Knowledge of statistical analysis and hypothesis testing\\n- Master's degree in Data Science, Statistics, or related field\\n\\nResponsibilities:\\n- Develop and deploy machine learning models\\n- Perform statistical analysis and data visualization\\n- Collaborate with cross-functional teams\\n- Present findings to stakeholders\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/analyze-resume",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["analyze-resume"]
+        },
+        "description": "Get detailed resume analysis including keywords, experience levels, and education matching."
+      },
+      "response": []
+    },
+    {
+      "name": "Analyze Resume (File Upload)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "resume_file",
+              "type": "file",
+              "src": "",
+              "description": "Upload your resume file (PDF, DOCX, or TXT)"
+            },
+            {
+              "key": "job_description",
+              "type": "text",
+              "value": "Senior Data Scientist\n\nRequirements:\n- 3+ years of experience in data science or machine learning\n- Strong programming skills in Python and SQL\n- Experience with machine learning frameworks (scikit-learn, TensorFlow)\n- Knowledge of statistical analysis and hypothesis testing\n- Master's degree in Data Science, Statistics, or related field\n\nResponsibilities:\n- Develop and deploy machine learning models\n- Perform statistical analysis and data visualization\n- Collaborate with cross-functional teams\n- Present findings to stakeholders",
+              "description": "Job description text"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8000/analyze-resume-file",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["analyze-resume-file"]
+        },
+        "description": "Get detailed resume analysis using uploaded file with file information and text extraction preview."
+      },
+      "response": []
+    },
+    {
+      "name": "API Documentation",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/docs",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["docs"]
+        },
+        "description": "Access the interactive API documentation (Swagger UI)."
+      },
+      "response": []
+    },
+    {
+      "name": "Web Interface",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": [""]
+        },
+        "description": "Access the web interface for easy testing."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    }
+  ]
+} 
