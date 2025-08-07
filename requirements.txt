@@ -12,3 +12,17 @@ spacy>=3.7.2
 nltk>=3.8.1
 python-docx>=1.1.0
 PyPDF2>=3.0.1 
+gunicorn 
+nltk
+spacy 
+pandas
+numpy
+scikit-learn 
+sentence-transformers
+transformers
+torch
+torchvision
+Pillow
+fastapi
+uvicorn
+python-dotenv 

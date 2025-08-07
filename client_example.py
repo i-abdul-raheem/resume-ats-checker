@@ -15,15 +15,11 @@ def test_health_check():
     try:
         response = requests.get(f"{BASE_URL}/health")
         if response.status_code == 200:
-            print("✓ Health check passed")
-            print(f"  Status: {response.json()['status']}")
-            print(f"  ATS Scorer Ready: {response.json()['ats_scorer_ready']}")
+            return True
         else:
-            print("✗ Health check failed")
+            return False
     except requests.exceptions.ConnectionError:
-        print("✗ Cannot connect to API server. Make sure the server is running.")
         return False
-    return True
 
 def calculate_ats_score(resume_text, job_description):
     """Calculate ATS score using the API."""
@@ -39,12 +35,9 @@ def calculate_ats_score(resume_text, job_description):
             result = response.json()
             return result
         else:
-            print(f"✗ API request failed: {response.status_code}")
-            print(f"  Error: {response.text}")
             return None
             
     except requests.exceptions.RequestException as e:
-        print(f"✗ Request error: {e}")
         return None
 
 def analyze_resume(resume_text, job_description):
@@ -61,20 +54,13 @@ def analyze_resume(resume_text, job_description):
             result = response.json()
             return result
         else:
-            print(f"✗ API request failed: {response.status_code}")
-            print(f"  Error: {response.text}")
             return None
             
     except requests.exceptions.RequestException as e:
-        print(f"✗ Request error: {e}")
         return None
 
 def main():
     """Main function to demonstrate API usage."""
-    print("=" * 60)
-    print("ATS Score Calculator - Client Example")
-    print("=" * 60)
-    
     # Test health check
     if not test_health_check():
         return
@@ -123,10 +109,6 @@ def main():
     - Deploy and monitor applications in cloud environments
     """
     
-    print("\n" + "=" * 60)
-    print("CALCULATING ATS SCORE")
-    print("=" * 60)
-    
     # Calculate ATS score
     result = calculate_ats_score(sample_resume, sample_job_description)
     
@@ -148,10 +130,6 @@ def main():
         print("\nRecommendations:")
         for rec in result['analysis']['recommendations']:
             print(f"  • {rec}")
-    
-    print("\n" + "=" * 60)
-    print("DETAILED ANALYSIS")
-    print("=" * 60)
     
     # Get detailed analysis
     detailed_result = analyze_resume(sample_resume, sample_job_description)

@@ -77,48 +77,15 @@ def test_ats_scoring():
     """
     
     try:
-        print("Initializing ATS Scorer...")
         scorer = ATSScorer()
-        print("ATS Scorer initialized successfully!\n")
         
-        print("Calculating ATS Score...")
         result = scorer.calculate_ats_score(sample_resume, sample_job_description)
-        
-        print("=" * 60)
-        print("ATS SCORE ANALYSIS RESULTS")
-        print("=" * 60)
-        
-        print(f"\nOverall ATS Score: {result['overall_score']}/100")
-        
-        print("\nIndividual Component Scores:")
-        for component, score in result['scores'].items():
-            print(f"  {component.replace('_', ' ').title()}: {score}/100")
-        
-        print("\nMatched Keywords:")
-        if result['analysis']['matched_keywords']:
-            print(f"  {', '.join(result['analysis']['matched_keywords'])}")
-        else:
-            print("  None found")
-        
-        print("\nMissing Keywords:")
-        if result['analysis']['missing_keywords']:
-            print(f"  {', '.join(result['analysis']['missing_keywords'])}")
-        else:
-            print("  None found")
-        
-        print("\nRecommendations:")
-        for rec in result['analysis']['recommendations']:
-            print(f"  • {rec}")
-        
-        print("\n" + "=" * 60)
         
         # Save results to JSON file
         with open('ats_test_results.json', 'w') as f:
             json.dump(result, f, indent=2)
-        print("Results saved to 'ats_test_results.json'")
         
     except Exception as e:
-        print(f"Error during testing: {e}")
         import traceback
         traceback.print_exc()
 
